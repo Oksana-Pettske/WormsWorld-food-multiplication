@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using WormsWorld.Enum;
 
@@ -13,12 +12,9 @@ namespace WormsWorld.Entity
         public Cell Position;
         public int Vitality;
 
-        private readonly WormMover _wormMover;
-
-        public Worm(World world, WormMover wormMover, string name, int x, int y)
+        public Worm(World world, string name, int x, int y)
         {
             World = world;
-            _wormMover = wormMover;
             Name = name;
             Position.X = x;
             Position.Y = y;

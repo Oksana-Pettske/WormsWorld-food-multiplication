@@ -3,7 +3,7 @@ using WormsWorld.Entity;
 
 namespace WormsWorld
 {
-    public class WormMover
+    public static class WormMover
     {
         public static void Move(Worm worm)
         {
@@ -20,6 +20,10 @@ namespace WormsWorld
             } else if (Math.Abs(closestFoodCell.Y) > Math.Abs(worm.Position.Y))
             {
                 worm.Position.Y--;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException();
             }
         }
 

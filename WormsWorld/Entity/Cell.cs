@@ -17,5 +17,15 @@ namespace WormsWorld.Entity
         {
             return X == other.X && Y == other.Y;
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Cell other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(X, Y);
+        }
     }
 }

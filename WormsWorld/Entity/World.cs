@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using WormsWorld.Enum;
-using System.Linq;
+﻿using System;
 using System.IO;
-using System;
+using System.Linq;
+using WormsWorld.Enum;
+using System.Collections.Generic;
 
 namespace WormsWorld.Entity
 {
@@ -10,8 +10,8 @@ namespace WormsWorld.Entity
     {
         private readonly StreamWriter _streamWriter;
 
-        public readonly List<Worm> Worms = new List<Worm>();
-        public readonly List<Food> Foods = new List<Food>();
+        public readonly List<Worm> Worms = new();
+        public readonly List<Food> Foods = new();
 
         public World(StreamWriter streamWriter)
         {
@@ -34,7 +34,7 @@ namespace WormsWorld.Entity
         
         public void CreateWorm(string name, int x, int y)
         {
-            Worms.Add(new Worm(this, new WormMover(), name, x, y));
+            Worms.Add(new Worm(this, name, x, y));
         }
 
         private void GenerateFood()
@@ -63,9 +63,9 @@ namespace WormsWorld.Entity
 
         private static Cell GenerateCell()
         {
-            Random random = new Random();
-            int x = NormalDistribution.NextNormal(random);
-            int y = NormalDistribution.NextNormal(random);
+            var random = new Random();
+            var x = NormalDistribution.NextNormal(random);
+            var y = NormalDistribution.NextNormal(random);
             return new Cell(x, y);
         }
 
@@ -73,10 +73,11 @@ namespace WormsWorld.Entity
         {
             foreach (var worm in Worms)
             {
-                foreach (var food in Foods.ToList().Where(food => food.Position.Equals(worm.Position)))
+                var anyFood = Foods.FirstOrDefault(x => x.Position.Equals(worm.Position));
+                if (anyFood != null)
                 {
                     worm.Vitality += 10;
-                    Foods.Remove(food);
+                    Foods.Remove(anyFood);
                 }
             }
         }
@@ -105,9 +106,10 @@ namespace WormsWorld.Entity
 
         private void IsWormDead()
         {
-            foreach (var worm in Worms.ToList().Where(worm => worm.Vitality <= 0))
+            var deadWorms = Worms.Where(x => x.Vitality <= 0);
+            foreach (var deadWorm in deadWorms)
             {
-                Worms.Remove(worm);
+                Worms.Remove(deadWorm);
             }
         }
 
@@ -121,9 +123,10 @@ namespace WormsWorld.Entity
 
         private void IsFoodRotten()
         {
-            foreach (var food in Foods.ToList().Where(food => food.Lifetime <= 0))
+            var rottenFoods = Foods.Where(x => x.Lifetime <= 0);
+            foreach (var rottenFood in rottenFoods)
             {
-                Foods.Remove(food);
+                Foods.Remove(rottenFood);
             }
         }
         
